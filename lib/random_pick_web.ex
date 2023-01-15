@@ -24,6 +24,8 @@ defmodule RandomPickWeb do
       import Plug.Conn
       import RandomPickWeb.Gettext
       alias RandomPickWeb.Router.Helpers, as: Routes
+
+      action_fallback RandomPickWeb.FallbackController
     end
   end
 
