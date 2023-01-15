@@ -1,6 +1,5 @@
 import Config
 
-
 config :random_pick, RandomPick.Repo,
   username: "postgres",
   password: "postgres",
@@ -9,7 +8,6 @@ config :random_pick, RandomPick.Repo,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
-
 
 config :random_pick, RandomPickWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4000],

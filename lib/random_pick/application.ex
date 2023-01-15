@@ -1,4 +1,5 @@
 defmodule RandomPick.Application do
+  @moduledoc false
 
   use Application
 

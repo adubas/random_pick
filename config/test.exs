@@ -3,7 +3,7 @@ import Config
 config :random_pick, RandomPick.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: "database",
   database: "random_pick_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
