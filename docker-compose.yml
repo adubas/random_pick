@@ -1,0 +1,28 @@
+services:
+  app:
+    image: 'anapdubas/random_pick:dev'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - './:/app'
+      - 'app_build:/app/_build'
+      - 'app_deps:/app/deps'
+    ports:
+      - '4000:4000'
+    depends_on:
+      - database
+  database:
+    image: postgres:15.1-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - database:/var/lib/postgresql/data
+volumes:
+  database: {}
+  app_build: {}
+  app_deps: {}
