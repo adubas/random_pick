@@ -24,6 +24,8 @@ defmodule RandomPickWeb.ConnCase do
       import Phoenix.ConnTest
       import RandomPickWeb.ConnCase
 
+      use Oban.Testing, repo: RandomPick.Repo
+
       alias RandomPickWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing

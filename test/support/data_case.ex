@@ -27,6 +27,8 @@ defmodule RandomPick.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import RandomPick.DataCase
+
+      use Oban.Testing, repo: RandomPick.Repo
     end
   end
 

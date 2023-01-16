@@ -19,7 +19,13 @@ config :random_pick, RandomPick.Mailer, adapter: Swoosh.Adapters.Local
 config :random_pick, Oban,
   repo: RandomPick.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [default: 10]
+  queues: [
+    draw_lottery_poller: 10,
+    draw_lottery_worker: 10
+  ],
+  crontab: [
+    {"@hourly", RandomPick.Lotteries.LotteriesOngoingPoller}
+  ]
 
 config :swoosh, :api_client, false
 

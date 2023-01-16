@@ -15,7 +15,7 @@ config :random_pick, RandomPickWeb.Endpoint,
 
 config :random_pick, RandomPick.Mailer, adapter: Swoosh.Adapters.Test
 
-config :random_pick, Oban, testing: :inline
+config :random_pick, Oban, testing: :manual
 
 config :logger, level: :warn
 

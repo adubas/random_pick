@@ -3,6 +3,8 @@ defmodule RandomPick.Lotteries do
     Module to handle with all Lottery context
   """
 
+  import Ecto.Query
+
   alias RandomPick.Lotteries.{Lottery, LotteryParticipants}
   alias RandomPick.Repo
 
@@ -40,5 +42,36 @@ defmodule RandomPick.Lotteries do
     datetime
     |> DateTime.to_date()
     |> Date.to_string()
+  end
+
+  def fetch_ongoing_lotteries_ids do
+    Lottery
+    |> where([l], l.available == ^true)
+    |> where([l], is_nil(l.winner_id))
+    |> where([l], l.deadline_date < ^DateTime.now!("Etc/UTC"))
+    |> select([l], l.id)
+    |> Repo.all()
+  end
+
+  def fetch_lottery(id) do
+    Lottery
+    |> Repo.get_by(id: id)
+    |> Repo.preload([:owner, :participants])
+  end
+
+  def fetch_lottery_winner(lottery) do
+    winner =
+      lottery
+      |> Repo.preload([:participants])
+      |> Map.get(:participants)
+      |> Enum.random()
+
+    {:ok, winner}
+  end
+
+  def update_lottery_winner(lottery, winner) do
+    lottery
+    |> Repo.preload([:owner, :participants])
+    |> Lottery.changeset(%{available: false, winner_id: winner.id})
   end
 end
