@@ -52,7 +52,7 @@ defmodule RandomPickWeb.LotteryControllerTest do
                |> json_response(:bad_request)
     end
 
-    test "returns lottery id when param are valid", %{conn: conn} do
+    test "returns lottery id when params are valid", %{conn: conn} do
       owner = insert(:user)
       deadline = DateTime.now!("Etc/UTC")
       draw = DateTime.now!("Etc/UTC")
@@ -78,6 +78,106 @@ defmodule RandomPickWeb.LotteryControllerTest do
       assert lottery.description == "this is a lottery"
       assert DateTime.to_date(lottery.deadline_date) == DateTime.to_date(deadline)
       assert DateTime.to_date(lottery.draw_date) == DateTime.to_date(draw)
+    end
+  end
+
+  describe "POST /participate" do
+    test "returns error when params are invalid", %{conn: conn} do
+      params = %{
+        "user_id" => nil,
+        "lottery_id" => nil
+      }
+
+      path = Routes.lottery_path(conn, :participate, params)
+
+      assert %{
+               "errors" => %{
+                 "user_id" => ["can't be blank"],
+                 "lottery_id" => ["can't be blank"]
+               }
+             } =
+               conn
+               |> post(path)
+               |> json_response(:bad_request)
+    end
+
+    test "returns error when user doesn't exists", %{conn: conn} do
+      lottery = insert(:lottery)
+
+      params = %{
+        "user_id" => UUID.generate(),
+        "lottery_id" => lottery.id
+      }
+
+      path = Routes.lottery_path(conn, :participate, params)
+
+      assert %{
+               "errors" => %{
+                 "user" => ["does not exist"]
+               }
+             } =
+               conn
+               |> post(path)
+               |> json_response(:bad_request)
+    end
+
+    test "returns error when lottery doesn't exists", %{conn: conn} do
+      user = insert(:user)
+
+      params = %{
+        "user_id" => user.id,
+        "lottery_id" => UUID.generate()
+      }
+
+      path = Routes.lottery_path(conn, :participate, params)
+
+      assert %{
+               "errors" => %{
+                 "lottery" => ["does not exist"]
+               }
+             } =
+               conn
+               |> post(path)
+               |> json_response(:bad_request)
+    end
+
+    test "returns ok when params are valid", %{conn: conn} do
+      user = insert(:user)
+      lottery = insert(:lottery)
+
+      params = %{
+        "user_id" => user.id,
+        "lottery_id" => lottery.id
+      }
+
+      path = Routes.lottery_path(conn, :participate, params)
+
+      assert "ok" =
+               conn
+               |> post(path)
+               |> response(:ok)
+    end
+
+    test "returns error when user already is participating on the lottery", %{conn: conn} do
+      user = insert(:user)
+      lottery = insert(:lottery)
+      insert(:lottery_participant, user: user, lottery: lottery)
+
+      params = %{
+        "user_id" => user.id,
+        "lottery_id" => lottery.id
+      }
+
+      path = Routes.lottery_path(conn, :participate, params)
+
+      assert %{
+               "errors" => %{
+                 "lottery_id" => ["has already been taken"]
+               }
+             } =
+               conn
+               |> post(path)
+               |> json_response(:bad_request)
     end
   end
 end

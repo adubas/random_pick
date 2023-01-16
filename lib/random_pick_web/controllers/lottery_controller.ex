@@ -10,4 +10,10 @@ defmodule RandomPickWeb.LotteryController do
       |> render("create.json", %{lottery: lottery})
     end
   end
+
+  def participate(conn, params) do
+    with {:ok, _lottery_participant} <- Lotteries.participate(params) do
+      resp(conn, :ok, "ok")
+    end
+  end
 end

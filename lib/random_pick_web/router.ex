@@ -10,6 +10,7 @@ defmodule RandomPickWeb.Router do
 
     post "/create_user", UserController, :create
     post "/create_lottery", LotteryController, :create
+    post "/participate", LotteryController, :participate
   end
 
   if Mix.env() in [:dev, :test] do
