@@ -5,9 +5,8 @@ defmodule RandomPickWeb.UserControllerTest do
 
   alias RandomPick.Repo
   alias RandomPick.Users.User
-  alias RandomPickWeb.UserController
 
-  describe "POST /" do
+  describe "POST /create_user" do
     test "returns error when params are invalid", %{conn: conn} do
       params = %{
         "name" => nil,

@@ -9,6 +9,7 @@ defmodule RandomPickWeb.Router do
     pipe_through :api
 
     post "/create_user", UserController, :create
+    post "/create_lottery", LotteryController, :create
   end
 
   if Mix.env() in [:dev, :test] do
