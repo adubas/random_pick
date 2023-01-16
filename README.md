@@ -10,6 +10,7 @@ desenvolvida por @adubas
 2. [Setup](#setup)
 3. [Libs](#libs)
 4. [Testing](#testing)
+5. [Postman Images](#postman_images)
 
 ## Requirements
 
@@ -46,3 +47,22 @@ Run the following
 $ docker-compose run --rm --service-ports app bash
 $ mix test
 ```
+
+## Postman Images
+
+Aqui estão algumas imagens do que se esperar ao rodar a aplicação e testá-la no Postman
+
+Criando um usuário com sucesso
+![Create User](priv/static/images/create_user.png)
+
+Erro ao criar usuário
+![Create User Error](priv/static/images/error_create_user.png)
+
+Criando um sorteio com sucesso
+![Create Lottery](priv/static/images/create_lottery.png)
+
+Vendo o resulto de um sorteio finalizado
+![Fetch result](priv/static/images/lottery_result.png)
+
+Vendo o resultado de um sorte em andamento
+![On going result](priv/static/images/lottery_on_going_result.png)
