@@ -14,9 +14,11 @@ defmodule RandomPickWeb.ErrorView do
     %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
   end
 
-  def render("errors.json", %{errors: changeset}) do
-    %{
-      errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
-    }
+  def render("errors.json", %{errors: message}) when is_binary(message) do
+    %{errors: message}
+  end
+
+  def render("errors.json", %{errors: changeset}) when is_map(changeset) do
+    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)}
   end
 end

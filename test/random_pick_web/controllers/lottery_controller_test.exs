@@ -180,4 +180,77 @@ defmodule RandomPickWeb.LotteryControllerTest do
                |> json_response(:bad_request)
     end
   end
+
+  describe "GET /result" do
+    test "returns error when params are blank", %{conn: conn} do
+      params = %{
+        "id" => nil
+      }
+
+      path = Routes.lottery_path(conn, :result, params)
+
+      assert %{"errors" => "Invalid params"} =
+               conn
+               |> get(path)
+               |> json_response(:bad_request)
+    end
+
+    test "returns error when params are invalid", %{conn: conn} do
+      params = %{
+        "invalid" => "invalid"
+      }
+
+      path = Routes.lottery_path(conn, :result, params)
+
+      assert %{"errors" => "Invalid params"} =
+               conn
+               |> get(path)
+               |> json_response(:bad_request)
+    end
+
+    test "returns error when lottery doesn't exists", %{conn: conn} do
+      params = %{
+        "id" => UUID.generate()
+      }
+
+      path = Routes.lottery_path(conn, :result, params)
+
+      assert %{"errors" => "Lottery not found"} =
+               conn
+               |> get(path)
+               |> json_response(:bad_request)
+    end
+
+    test "returns winner data when params are valid", %{conn: conn} do
+      winner = insert(:user)
+      lottery = insert(:lottery, available: false, winner: winner)
+
+      params = %{
+        "id" => lottery.id
+      }
+
+      path = Routes.lottery_path(conn, :result, params)
+
+      assert %{"name" => winner.name, "email" => winner.email} ==
+               conn
+               |> get(path)
+               |> json_response(:ok)
+    end
+
+    test "returns error when lottery is still on going", %{conn: conn} do
+      lottery = insert(:lottery)
+      date = DateTime.to_date(lottery.draw_date) |> Date.to_string()
+
+      params = %{
+        "id" => lottery.id
+      }
+
+      path = Routes.lottery_path(conn, :result, params)
+
+      assert %{"errors" => "Lottery result will be available in #{date}"} ==
+               conn
+               |> get(path)
+               |> json_response(:bad_request)
+    end
+  end
 end
